@@ -577,16 +577,32 @@ class LLaDAModel(BaseModel):
         """Get perplexity scores.
 
         Note: LLaDA uses diffusion-based generation, not autoregressive.
-        Standard perplexity calculation doesn't apply directly.
-        Use lm-eval toolkit for perplexity-based evaluation.
+        Standard perplexity calculation doesn't work for diffusion models.
+
+        Why PPL doesn't apply to LLaDA:
+        - Autoregressive models (GPT, LLaMA) compute P(token_n | tokens_1..n-1)
+          which gives a straightforward perplexity calculation.
+        - Diffusion models like LLaDA generate via iterative denoising of
+          masked tokens, not next-token prediction. Computing likelihood
+          requires ELBO (Evidence Lower Bound) estimation with Monte Carlo
+          sampling over mask ratios, which is fundamentally different.
+
+        OpenCompass uses PPL for multiple-choice evaluation (PPLInferencer):
+        - Given options A and B, compute PPL for each
+        - Select the option with lower PPL (higher likelihood)
+        - This approach doesn't work with diffusion-based generation
+
+        For LLaDA evaluation, use generation-based configs (*_gen.py) instead
+        of PPL-based configs (*_ppl.py). Most modern benchmarks (GSM8K, MATH,
+        HumanEval, MMLU) support generation-based evaluation.
 
         Raises:
             NotImplementedError: Always raised for LLaDA models.
         """
         raise NotImplementedError(
             'LLaDA is a diffusion model. Standard perplexity calculation '
-            'does not apply. Use lm-eval toolkit for PPL-based evaluation, '
-            'or use generation-based evaluation (e.g., gsm8k_gen).'
+            'does not apply. Use generation-based evaluation (e.g., gsm8k_gen) '
+            'instead of PPL-based evaluation (e.g., *_ppl.py configs).'
         )
 
     def get_token_len(self, prompt: str) -> int:
