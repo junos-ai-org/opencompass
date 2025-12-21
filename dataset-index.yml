@@ -128,6 +128,12 @@
     paper: https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10778138
     configpath: opencompass/configs/datasets/MedBench/medbench_gen.py
     configpath_llmjudge: ''
+- mmtu:
+    name: MMTU (Massive Multi-Task Table Understanding)
+    category: Reasoning / Table
+    paper: https://arxiv.org/abs/2505.11125
+    configpath: opencompass/configs/datasets/MMTU/mmtu_gen.py
+    configpath_llmjudge: ''
 - MedCalc_Bench:
     name: MedCalc_Bench
     category: Knowledge / Medicine

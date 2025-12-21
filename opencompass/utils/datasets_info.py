@@ -9,6 +9,12 @@ DATASETS_MAPPING = {
         "hf_id": None,
         "local": "./data/ojbench/ojbench_464.jsonl",
     },
+    # MMTU (Massive Multi-Task Table Understanding)
+    "opencompass/mmtu": {
+        "ms_id": None,
+        "hf_id": "MMTU-benchmark/MMTU",
+        "local": "./data/mmtu/",
+    },
     # Mol Instructions
     "opencompass/mol-instructions": {
         "ms_id": None,
