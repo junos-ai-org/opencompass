@@ -29,6 +29,12 @@ models = [
         max_out_len=1024,
         batch_size=1,
         run_cfg=dict(num_gpus=1),
+        # LLaDA diffusion parameters
+        gen_length=256,
+        gen_blocksize=32,
+        gen_steps=256,
+        diff_confidence_eos_eot_inf=True,
+        diff_logits_eos_inf=False,
     ),
     # Qwen2 7B Instruct - Autoregressive transformer model
     dict(
