@@ -4,13 +4,14 @@ This configuration evaluates both models on the MMTU (Massive Multi-Task Table
 Understanding) benchmark using 50 sample questions for quick testing.
 
 Usage:
-    python run.py configs/eval_mmtu_llada_qwen2_50.py
+    python run.py examples/eval_mmtu_llada_qwen2_50.py \
+        -w outputs/mmtu_llada_qwen2_50
 """
 
 from mmengine.config import read_base
 
 with read_base():
-    from .datasets.mmtu.mmtu_gen_b510c3 import (
+    from opencompass.configs.datasets.mmtu.mmtu_gen_b510c3 import (
         mmtu_reader_cfg,
         mmtu_infer_cfg,
         mmtu_eval_cfg,
