@@ -16,6 +16,17 @@ The benchmark encompasses diverse table operations including:
 
 Reference: https://github.com/MMTU-Benchmark/MMTU
 HuggingFace: https://huggingface.co/datasets/MMTU-benchmark/MMTU
+
+Note on Evaluation Differences:
+    This implementation uses a simplified unified evaluator with accuracy
+    metrics. The official MMTU benchmark uses 27 task-specific evaluators
+    with different metrics:
+    - Accuracy for: NL2SQL, Table-QA, Entity-Matching, Fact-Verification, etc.
+    - F1 score for: Error-Detection, Schema-Matching, Semantic-Join, etc.
+    - SQL execution comparison (not string matching) for NL2SQL tasks
+
+    Future enhancements could add task-specific evaluators for more accurate
+    alignment with the official benchmark results.
 """
 
 import re
@@ -134,6 +145,15 @@ def check_answer_correctness(prediction: str, reference: str,
     pred_norm = normalize_answer(prediction)
     ref_norm = normalize_answer(reference)
 
+    # CRITICAL: Empty predictions should NEVER be considered correct
+    # This handles the case where a model produces no output
+    if not pred_norm:
+        return False
+
+    # If reference is empty but prediction is not, it's incorrect
+    if not ref_norm:
+        return False
+
     # Exact match after normalization
     if pred_norm == ref_norm:
         return True
@@ -155,7 +175,8 @@ def check_answer_correctness(prediction: str, reference: str,
         if ref_norm in variants and pred_norm in variants:
             return True
 
-    # Check if prediction contains the reference
+    # Check if prediction contains the reference (but only if reference is non-empty)
+    # Note: ref_norm is guaranteed non-empty here due to the check above
     if ref_norm in pred_norm:
         return True
 
